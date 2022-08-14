@@ -154,14 +154,10 @@ nav > ul > li{
 
 .profileForm {
   border-bottom: 1px solid rgba(255, 255, 255, 0.9);
-  padding-bottom: 30px;
+  padding-bottom: 15px;
   width: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.logOut {
-  margin-top: 50px;
 }
 
 /* Nwitter Factory */
@@ -417,8 +413,8 @@ nav > ul > li{
 .photo_big,
 .photo_small{
   position: relative;
-  background-color: #04aaff;
   border-radius: 50%;
+  overflow: hidden;
 }
 .photo_big > .profile_photo,
 .photo_small > .profile_photo{
@@ -429,6 +425,9 @@ nav > ul > li{
   right: 0;
   color: #FFF;
   text-align: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 .photo_big{
   width: 120px;
@@ -436,12 +435,13 @@ nav > ul > li{
   margin: auto;
 }
 .photo_small{
-  width: 50px;
-  height: 50px;
+  width: 51px;
+  height: 51px;
 }
 .photo_big > .profile_photo{
   font-size: 3em;
   font-weight: 600;
+  cursor: pointer;
 }
 .photo_small > .profile_photo{
   font-size: 1em;
@@ -449,5 +449,16 @@ nav > ul > li{
 }
 .profile_photo > img{
   width: 100%;
+  height: 100%;
   margin: auto;
+}
+.profile_photo > span{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+}
+.no_photo{
+  background-color: #04aaff;
 }

@@ -1,5 +1,5 @@
 import { fbStorage, firebaseDB } from "fb";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { deleteObject, getDownloadURL } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,15 +10,32 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Tweet = ({ tweetObj, author, photo, isOwner }) => {
+const Tweet = ({ tweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false);
   const [newTweet, setNewTweet] = useState(tweetObj.text);
   const [imageUrl, setImageUrl] = useState(tweetObj.attachmentUrl);
   const [delImageUrl, setDelImageUrl] = useState();
   const [newImageUrl, setNewImageUrl] = useState();
   const [elapsedTime, setElapsedTime] = useState();
+  const [author, setAuthor] = useState({});
   const docRef = doc(firebaseDB, `tweets/${tweetObj.id}`);
   const ogImageUrl = tweetObj.attachmentUrl;
+  const memberRef = doc(firebaseDB, `members/${tweetObj.creatorId}`);
+
+  const getMember = async () => {
+    const memberSnap = await getDoc(memberRef);
+    if (memberSnap.exists()) {
+      const memberObj = {
+        displayName: memberSnap.data().displayName,
+        photoURL: memberSnap.data().photoURL,
+      };
+      setAuthor(memberObj);
+    }
+  };
+
+  useEffect(() => {
+    getMember();
+  }, []);
 
   const onDeleteClick = async (event) => {
     event.preventDefault();
@@ -216,22 +233,26 @@ const Tweet = ({ tweetObj, author, photo, isOwner }) => {
         <>
           <div>
             <div className="tweet_top">
-              <div className="photo_small">
-                {photo ? (
+              <div
+                className={`photo_small${author.photoURL ? "" : " no_photo"}`}
+              >
+                {author ? (
                   <>
                     <label className="profile_photo">
-                      <img src={photo} alt="" />
+                      <img src={author.photoURL} alt="" />
                     </label>
                   </>
                 ) : (
                   <label className="profile_photo">
-                    {author.substring(0, 1).toUpperCase()}
+                    <span>
+                      {author.displayName.substring(0, 1).toUpperCase()}
+                    </span>
                   </label>
                 )}
               </div>
               <div className="tweet_info">
                 <div className="tweet_author">
-                  <div className="name">{author}</div>&nbsp;·&nbsp;
+                  <div className="name">{author.displayName}</div>&nbsp;·&nbsp;
                   <span>{elapsedTime}</span>
                 </div>
                 <h4 className="text">{tweetObj.text}</h4>

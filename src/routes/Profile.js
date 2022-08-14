@@ -1,6 +1,14 @@
 import { authService, fbStorage, firebaseDB } from "fb";
-import { updateProfile } from "firebase/auth";
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { signOut, updateProfile } from "firebase/auth";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { getDownloadURL } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,12 +17,12 @@ const Profile = ({ userObj, refreshUser }) => {
   const [newName, setNewName] = useState(userObj.displayName);
   const [photoUrl, setPhotoUrl] = useState(userObj.photoURL);
   const [newPhotoUrl, setNewPhotoUrl] = useState("");
+  const myRef = doc(firebaseDB, `members/${userObj.uid}`);
   const navigate = useNavigate();
-  const handleRedirect = () => navigate("/");
 
   const onLogOutClick = () => {
-    authService.signOut(authService.getAuth());
-    handleRedirect();
+    signOut(authService.getAuth());
+    navigate("/");
     refreshUser();
   };
 
@@ -68,6 +76,18 @@ const Profile = ({ userObj, refreshUser }) => {
     if (updateUserInfo !== "") {
       await updateProfile(userObj, updateUserInfo);
     }
+
+    if (attachmentUrl === "") {
+      updateDoc(myRef, {
+        displayName: newName,
+      });
+    } else {
+      updateDoc(myRef, {
+        displayName: newName,
+        photoURL: attachmentUrl,
+      });
+    }
+
     refreshUser();
   };
 
@@ -95,7 +115,7 @@ const Profile = ({ userObj, refreshUser }) => {
     <div className="container profile">
       <form className="profileForm" onSubmit={onSubmit}>
         <div className="photo_wrap">
-          <div className="photo_big">
+          <div className={`photo_big${photoUrl ? "" : " no_photo"}`}>
             {photoUrl ? (
               <>
                 <label className="profile_photo" htmlFor="photo_file">
@@ -104,7 +124,7 @@ const Profile = ({ userObj, refreshUser }) => {
               </>
             ) : (
               <label className="profile_photo" htmlFor="photo_file">
-                {userObj.displayName.substring(0, 1).toUpperCase()}
+                <span>{userObj.displayName.substring(0, 1).toUpperCase()}</span>
               </label>
             )}
           </div>

@@ -24,11 +24,12 @@ function App() {
   useEffect(() => {
     checkUserState();
     if (init) {
-      document.getElementById("loader_img").classList.add("ready");
-      console.log(document.getElementById("loader_img"));
+      const loader = document.getElementById("loader_img");
+      loader.classList.add("ready");
       setTimeout(() => {
         setReady(true);
       }, 1200);
+      return;
     }
   }, [init]);
 

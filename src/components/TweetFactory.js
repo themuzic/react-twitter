@@ -34,7 +34,7 @@ const TweetFactory = ({ userObj, collectionRef }) => {
       creatorId: userObj.uid,
       attachmentUrl,
     };
-    //console.log(uploadedFileUrl);
+
     await addDoc(collectionRef, newTweet);
     setTweet("");
     setFileUrl("");

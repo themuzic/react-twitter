@@ -1,5 +1,5 @@
 // import React, { useState } from "react";
-import { HashRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes } from "react-router-dom";
 import { Route } from "react-router";
 import Auth from "routes/Auth";
 import Home from "routes/Home";

@@ -6,7 +6,8 @@ import {
   faGithub,
 } from "@fortawesome/free-brands-svg-icons";
 import AuthForm from "components/AuthForm";
-import { authService } from "fb";
+import { authService, firebaseDB } from "fb";
+import { doc, setDoc } from "firebase/firestore";
 
 const Auth = () => {
   const auth = authService.getAuth();
@@ -24,8 +25,14 @@ const Auth = () => {
       provider = new authService.GithubAuthProvider();
       provider.addScope("repo");
     }
-    console.log(`provider: ${provider}`);
-    await authService.signInWithPopup(auth, provider);
+    const { user } = await authService.signInWithPopup(auth, provider);
+
+    const newMember = {
+      uid: user.uid,
+      photoURL: user.photoURL,
+      displayName: user.displayName,
+    };
+    setDoc(doc(firebaseDB, "members", user.uid), newMember);
   };
 
   return (
