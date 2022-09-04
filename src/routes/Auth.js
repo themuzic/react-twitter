@@ -11,7 +11,6 @@ import { doc, setDoc } from "firebase/firestore";
 
 const Auth = () => {
   const auth = authService.getAuth();
-
   const onSocialClick = async (event) => {
     const {
       target: { name },
