@@ -36,6 +36,12 @@ img{
   border-radius: 10px;
 }
 
+nav{
+  position: relative;
+  max-width: 400px;
+  margin: auto;
+}
+
 nav > ul > li{
   position: relative;
   width: 60px;
@@ -108,9 +114,8 @@ nav > ul > li{
   color: #666;
 }
 
-
-
 .container {
+  position: relative;
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -461,4 +466,18 @@ nav > ul > li{
 }
 .no_photo{
   background-color: #04aaff;
+}
+#my-tweet-wrap{
+  position: absolute;
+  top: -47px;
+  right: 0;
+  width: max-content;
+}
+#my-tweet-wrap label,
+#my-tweet-wrap input[type=checkbox]{
+  cursor: pointer;
+}
+#my-tweet-wrap input[type=checkbox]{
+  appearance: auto;
+  vertical-align: middle;
 }
