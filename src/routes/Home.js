@@ -2,11 +2,22 @@ import React, { useEffect, useState } from "react";
 import Tweet from "components/Tweet";
 import TweetFactory from "components/TweetFactory";
 import { firebaseDB } from "fb";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 
 const Home = ({ userObj }) => {
   const collectionRef = collection(firebaseDB, "tweets");
   const tweetQuery = query(collectionRef, orderBy("createdAt", "desc"));
+  const myTweetQuery = query(
+    collection(firebaseDB, "tweets"),
+    where("creatorId", "==", userObj.uid),
+    orderBy("createdAt", "desc")
+  );
   const [tweets, setTweets] = useState([]);
   const [isOnlyMyTweets, setIsOnlyMyTweets] = useState(false);
 
@@ -15,18 +26,12 @@ const Home = ({ userObj }) => {
   };
 
   useEffect(() => {
-    onSnapshot(tweetQuery, (snapShot) => {
+    const query = isOnlyMyTweets ? myTweetQuery : tweetQuery;
+    onSnapshot(query, (snapShot) => {
       let tweetArr = snapShot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      if (isOnlyMyTweets) {
-        tweetArr = tweetArr.filter((tweet) => {
-          if (tweet.creatorId === userObj.uid) {
-            return tweet;
-          }
-        });
-      }
       setTweets(tweetArr);
     });
   }, [isOnlyMyTweets]);

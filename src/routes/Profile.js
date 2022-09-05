@@ -1,14 +1,6 @@
 import { authService, fbStorage, firebaseDB } from "fb";
 import { signOut, updateProfile } from "firebase/auth";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  getDocs,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,16 +16,6 @@ const Profile = ({ userObj, refreshUser }) => {
     signOut(authService.getAuth());
     navigate("/");
     refreshUser();
-  };
-
-  const getMyTweets = async () => {
-    const q = query(
-      collection(firebaseDB, "tweets"),
-      where("creatorId", "==", userObj.uid),
-      orderBy("createdAt", "desc")
-    );
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {});
   };
 
   const onChange = (event) => {
