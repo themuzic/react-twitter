@@ -472,6 +472,7 @@ nav > ul > li{
   top: -47px;
   right: 0;
   width: max-content;
+  margin-right: 15px;
 }
 #my-tweet-wrap label,
 #my-tweet-wrap input[type=checkbox]{
